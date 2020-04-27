@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export default function NuevoPaciente() {
+export default function NuevoProducto() {
+  const [sku, setSku] = useState();
+  const [codigo, setCodigo] = useState();
   const [nombre, setNombre] = useState();
-  const [correo, setCorreo] = useState();
-  const [dpi, setDpi] = useState();
-  const [fecha, setFecha] = useState();
-  const [clave, setClave] = useState();
+  const [descripcion, setDescripcion] = useState();
+  const [precio, setPrecio] = useState();
 
-  function crearUsuario() {
+  function crearProducto() {
     axios
       .post(
         "http://18.223.121.116:4000/usuario/nuevoUsuario",
         {
+            /*
           DPI: dpi,
           nombre: nombre,
           fecha_nacimiento: fecha,
           correo: correo,
-          password: clave
+          password: clave*/
         }
       )
       .then((res)=>{
-        console.log("user creado ")
+        console.log("producto creado")
       })
       .catch((error)=>{
         console.log(error);
@@ -30,60 +31,57 @@ export default function NuevoPaciente() {
   return (
     <div className="formulario">
       <form autoComplete="off">
-        <h1 align="center">Nuevo Usuario </h1>
-        <h2>Datos Personales</h2>
+        <h1 align="center">Nuevo Producto </h1>
+        <h2>Datos Producto</h2>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Nombre Completo</label>
+          <label for="exampleFormControlInput1">SKU</label>
           <input
             class="form-control"
             id="exampleFormControlInput1"
-            onChange={(event) => setNombre(event.target.value)}
+            onChange={(event) => setSku(event.target.value)}
           />
         </div>
 
         <div className="row">
           <div class="form-group col-6">
-            <label for="exampleFormControlSelect1">Correo Electronico</label>
+            <label for="exampleFormControlSelect1">Codigo de Barras</label>
             <input
             class="form-control"
             id="exampleFormControlInput1"
-            onChange={(event) => setCorreo(event.target.value)}
+            onChange={(event) => setCodigo(event.target.value)}
           />
           </div>
           <div class="form-group col-6">
-            <label for="exampleFormControlSelect2">DPI</label>
+            <label for="exampleFormControlSelect2">Nombre</label>
             <input
-              type="Number"
               class="form-control"
               id="exampleFormControlInput1"
-              onChange={(event) => setDpi(event.target.value)}
+              onChange={(event) => setNombre(event.target.value)}
             />
           </div>
         </div>
 
         <div class="form-group">
-          <label for="exampleFormControlSelect2">Fecha de Nacimiento</label>
+          <label for="exampleFormControlSelect2">Descripcion</label>
           <input
             class="form-control"
             id="exampleFormControlInput1"
-            placeholder="29/04/1997"
-            onChange={(event) => setFecha(event.target.value)}
+            onChange={(event) => setDescripcion(event.target.value)}
           />
         </div>
 
         <div class="form-group">
-          <label for="exampleFormControlTextarea1">Contraseña</label>
+          <label for="exampleFormControlTextarea1">Precio</label>
           <input
-            type="password"
             class="form-control"
             id="exampleFormControlTextarea1"
-            onChange={(event) => setClave(event.target.value)}
+            onChange={(event) => setPrecio(event.target.value)}
           ></input>
         </div>
 
         
       </form>
-      <button className="btn-primary" onClick={() => crearUsuario()}>
+      <button className="btn-primary" onClick={() => crearProducto()}>
         {" "}
         Crear
       </button>

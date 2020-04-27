@@ -5,6 +5,19 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import NuevoPaciente from "./components/NuevoPaciente";
 import ListaEspera from "./components/ListaEspera";
+import Dropdown from 'react-bootstrap/Dropdown';
+import ModificarUsuario from "./components/ModificarUsuario";
+import NuevoProducto from './components/NuevoProducto';
+import NuevaSede from './components/NuevaSede';
+import NuevaBodega from './components/NuevaBodega';
+import Login from './components/Login';
+import NuevoPermiso from './components/NuevoPermiso';
+import RemoverPermiso from './components/RemoverPermiso';
+import AgregarRol from './components/AgregarRol';
+import Perfil from './components/Perfil';
+import RegistrarVenta from './components/RegistrarVenta';
+import LogInventario from "./components/LogInventario";
+import CambioInventario from "./components/CambioInventario";
 
 function App() {
   return (
@@ -17,101 +30,254 @@ function App() {
               to="#"
             >
               <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laptop-medical"></i>
+                <i class="fas fa-poop"></i>
               </div>
               <div class="sidebar-brand-text mx-3">
                 <span>
-                  Hospital <br /> Roosevelt
+                  Choco <br /> Panel
                 </span>
               </div>
             </Link>
+
+            
             <hr class="sidebar-divider my-0" />
             <ul class="nav navbar-nav text-light" id="accordionSidebar">
-              <li class="nav-item" role="presentation">
+              
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-user-circle"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Perfil
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/iniciarSesion">
+                  <Dropdown.Item href="#/action-1">Iniciar Sesion</Dropdown.Item>
+                </Link>
+                <Link class="nav-link" to="/miPerfil">
+                  <Dropdown.Item href="#/action-2">Mi cuenta</Dropdown.Item>
+                </Link>
+                  <Dropdown.Item href="#/action-3">Cerrar Sesion</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-users"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Usuarios
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
                 <Link class="nav-link" to="/">
-                  <i
-                    class="fas fa-user-plus"
-                    style={{ fontSize: 130 + "%" }}
-                  ></i>
-                  <span style={{ fontSize: 130 + "%" }}>
-                    {" "}
-                    Ingresar Paciente
-                  </span>
+                  <Dropdown.Item href="#/action-1">Crear</Dropdown.Item>
                 </Link>
-              </li>
-              <li class="nav-item" role="presentation">
+                <Link class="nav-link" to="/modificarUsuario">
+                  <Dropdown.Item href="#/action-2">Modificar</Dropdown.Item>
+                </Link>
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
                 <Link class="nav-link" to="/listaUsuarios">
-                  <i class="fas fa-users" style={{ fontSize: 130 + "%" }}></i>
-                  <span style={{ fontSize: 130 + "%" }}>Lista de Espera</span>
+                  <Dropdown.Item href="#/action-3">Listar</Dropdown.Item>
                 </Link>
+                </Dropdown.Menu>
+              </Dropdown>
               </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" href="table.html">
-                  <i
-                    class="fas fa-exclamation-circle"
-                    style={{ fontSize: 130 + "%" }}
-                  ></i>
-                  <span style={{ fontSize: 130 + "%" }}>Bajo Atención</span>
-                </a>
-              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-box-open"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Productos
+                </span>
+                </Dropdown.Toggle>
 
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" href="register.html">
-                  <i
-                    class="fas fa-book-medical"
-                    style={{ fontSize: 130 + "%" }}
-                  ></i>
-                  <span style={{ fontSize: 130 + "%" }}>
-                    Historial de Pacientes
-                  </span>
-                </a>
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/nuevoProducto">
+                  <Dropdown.Item href="#/action-1">Crear</Dropdown.Item>
+                </Link>
+                  <Dropdown.Item href="#/action-2">Modificar</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
               </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" href="login.html">
-                  <i class="fas fa-vials" style={{ fontSize: 130 + "%" }}></i>
-                  <span style={{ fontSize: 130 + "%" }}>Pruebas</span>
-                </a>
+              
+              <li>
+                <Dropdown>
+                <i class="fas fa-warehouse"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Bodegas
+                </span>
+                </Dropdown.Toggle>
 
-                <ul class=" text-light">
-                  <li class="nav-item">
-                    <a class="nav-link">
-                      <i
-                        class="fas fa-book-medical"
-                        style={{ fontSize: 100 + "%" }}
-                      ></i>
-                      <span style={{ fontSize: 130 + "%" }}>COVID</span>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link">
-                      <i
-                        class="fas fa-book-medical"
-                        style={{ fontSize: 100 + "%" }}
-                      ></i>
-                      <span style={{ fontSize: 130 + "%" }}>DENGUE</span>
-                    </a>
-                  </li>
-                </ul>
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/nuevaBodega">
+                  <Dropdown.Item href="#/action-1">Crear</Dropdown.Item>
+                </Link>
+                  <Dropdown.Item href="#/action-2">Modificar</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
               </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-store-alt"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Sedes
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/nuevaSede">
+                  <Dropdown.Item href="#/action-1">Crear</Dropdown.Item>
+                </Link>
+                  <Dropdown.Item href="#/action-2">Modificar</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-key"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Permisos
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/nuevoPermiso">
+                  <Dropdown.Item href="#/action-1">Crear</Dropdown.Item>
+                </Link>
+                <Link class="nav-link" to="/removerPermiso">
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Link>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-user-tag"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Roles
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/agregarRol">
+                  <Dropdown.Item href="#/action-1">Asignar</Dropdown.Item>
+                </Link>
+                <Link class="nav-link" to="/removerPermiso">
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Link>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-layer-group"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Inventarios
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/logsInventario">
+                  <Dropdown.Item href="#/action-1">Logs</Dropdown.Item>
+                </Link>
+                <Link class="nav-link" to="/cambioInventario">
+                  <Dropdown.Item href="#/action-3">Registrar Cambio</Dropdown.Item>
+                </Link>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              <li>
+                
+                <Dropdown>
+                <i class="fas fa-dollar-sign"  style={{ fontSize: 130 + "%" }}></i>
+                <Dropdown.Toggle variant='#2b1214'>
+                <span style={{ fontSize: 130 + "%" }}>{" "}
+                    Ventas
+                </span>
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                <Link class="nav-link" to="/registrarVenta">
+                  <Dropdown.Item href="#/action-1">Registrar</Dropdown.Item>
+                </Link>
+                <Link class="nav-link" to="/removerPermiso">
+                  <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
+                </Link>
+                </Dropdown.Menu>
+              </Dropdown>
+              </li>
+              
+              
+              
             </ul>
-            <div class="text-center d-none d-md-inline">
-              <button
-                class="btn rounded-circle border-0"
-                id="sidebarToggle"
-                type="button"
-              ></button>
-            </div>
+            
           </div>
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
           <div id="content">
             <Switch>
+              <Route path="/logsInventario">
+                <LogInventario></LogInventario>
+              </Route>
+              <Route path="/cambioInventario">
+                <CambioInventario></CambioInventario>
+              </Route>
+              <Route path="/registrarVenta">
+                <RegistrarVenta></RegistrarVenta>
+              </Route>
+              <Route path="/miPerfil">
+                <Perfil></Perfil>
+              </Route>
+              <Route path="/agregarRol">
+                <AgregarRol></AgregarRol>
+              </Route>
+              <Route path="/nuevoPermiso">
+                <NuevoPermiso></NuevoPermiso>
+              </Route>
+              <Route path="/removerPermiso">
+                <RemoverPermiso></RemoverPermiso>
+              </Route>
+              <Route path="/iniciarSesion">
+                <Login></Login>
+              </Route>
               <Route path="/listaUsuarios">
                 <ListaEspera></ListaEspera>
+              </Route>
+              <Route path="/modificarUsuario">
+                <ModificarUsuario></ModificarUsuario>
+              </Route>
+              <Route path="/nuevoProducto">
+                <NuevoProducto></NuevoProducto>
+              </Route>
+              <Route path="/nuevaSede">
+                <NuevaSede></NuevaSede>
+              </Route>
+              <Route path="/nuevaBodega">
+                <NuevaBodega></NuevaBodega>
               </Route>
               <Route path="/">
                 <NuevoPaciente></NuevoPaciente>
               </Route>
+
             </Switch>
           </div>
           <footer class="bg-white sticky-footer">

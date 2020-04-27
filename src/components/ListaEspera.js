@@ -7,11 +7,13 @@ export default function ListaEspera() {
   useEffect(() => {
     axios
       .get(
-        "https://3aq0p4k16e.execute-api.us-east-2.amazonaws.com/default/voluntariadoGetPost"
+        
+        "http://18.223.121.116:4000/usuario/getUsuarios"
+        
       )
       .then((res) => {
-        console.log(res.data.Items);
-        setPacientes(res.data.Items);
+        console.log(res.data);
+        setPacientes(res.data);
       });
   }, []);
 
@@ -53,40 +55,23 @@ export default function ListaEspera() {
     }
   }
   const lista = pacientes.map((element) => {
-    if (element.paciente.estadoHospital === "Cola") {
+    {
       return (
         <div className="col-md-3 card datos">
           <h3
+            /*
             className={`card-header  ${getColor(
               element.paciente.riesgo
             )} ${getColorT(element.paciente.riesgo)}`}
           >
-            {" "}
-            {element.paciente.nombre}
+            {" "}*/
+            >
+            {element.nombre}
           </h3>
-          <p className="card-body"> {element.paciente.residencia}</p>
-          <div className="row">
-            <div className="col-lg-6">
-              <a
-                class="badge badge-success"
-                onClick={() => {
-                  ingresar(element.date);
-                }}
-              >
-                Ingresar
-              </a>
-            </div>
-            <div className="col-lg-6">
-              <a
-                class="badge badge-danger"
-                onClick={() => {
-                  alert("Sacar Paciente");
-                }}
-              >
-                Exgreso
-              </a>
-            </div>
-          </div>
+          <p className="card-body"> {element.DPI} <br>
+          </br> {element.correo}<br></br>
+          {element.fecha}
+          </p>
         </div>
       );
     }
@@ -96,7 +81,7 @@ export default function ListaEspera() {
     <div className="row">
       <h2 className="datos text-secondary" align="center">
         {" "}
-        Cola de Izquierda a Derecha!
+        Usuarios Registrados 
       </h2>
       {lista}
     </div>
