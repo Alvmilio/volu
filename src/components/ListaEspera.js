@@ -68,9 +68,9 @@ export default function ListaEspera() {
             >
             {element.nombre}
           </h3>
-          <p className="card-body"> {element.DPI} <br>
-          </br> {element.correo}<br></br>
-          {element.fecha}
+          <p className="card-body">DPI: {element.DPI} <br></br>
+          Correo: {element.correo}<br></br>
+          ID: {element.ID}
           </p>
         </div>
       );

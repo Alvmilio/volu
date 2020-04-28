@@ -11,14 +11,13 @@ export default function NuevoProducto() {
   function crearProducto() {
     axios
       .post(
-        "http://18.223.121.116:4000/usuario/nuevoUsuario",
+        "http://18.223.121.116:4000/producto/nuevoProducto",
         {
-            /*
-          DPI: dpi,
+          SKU: sku,
+          codigo_barras: codigo,
           nombre: nombre,
-          fecha_nacimiento: fecha,
-          correo: correo,
-          password: clave*/
+          descripcion: descripcion,
+          precio: precio
         }
       )
       .then((res)=>{

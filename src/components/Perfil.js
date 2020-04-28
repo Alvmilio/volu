@@ -8,13 +8,14 @@ export default function Perfil() {
   useEffect(() => {
 
     var usr = JSON.parse(localStorage.getItem('user'));
- 
+    console.log(usr);
+    console.log(usr.ID);
     axios
-      .get(
+      .post(
         
         "http://18.223.121.116:4000/permiso/permisosUsuario",
         {
-            id_usuario: usr.ID
+          id_usuario: usr.ID,
         }
         
       )
@@ -26,14 +27,14 @@ export default function Perfil() {
 
 const usr = JSON.parse(localStorage.getItem('user'));
   
-/*
+
 const lista = permisos.map((element) => {
     {
       return (
         <option value={element.id_permiso}>{element.permiso}</option>
       );
     }
-  });*/
+  });
 
   return (
     <div className="formulario">
@@ -94,12 +95,8 @@ const lista = permisos.map((element) => {
       </div>
       <div class="form-group">
         <label for="exampleFormControlTextarea1">Permisos</label>
-        <select
-              class="form-control"
-              id="exampleFormControlSelect1"
-              disabled="true"
-            >
-                
+        <select class="form-control" id="exampleFormControlSelect1">
+             {lista}   
       </select>
       </div>
       

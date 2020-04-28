@@ -1,24 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function NuevaSede() {
+  const [usuarios = [], setUsuarios] = useState();
   const [alias, setAlias] = useState();
   const [direccion, setDireccion] = useState();
   const [departamento, setDepartamento] = useState();
   const [municipio, setMunicipio] = useState();
   const [encargado, setEncargado] = useState();
 
-  function crearProducto() {
+  useEffect(() => {
+    axios
+      .get(
+        
+        "http://18.223.121.116:4000/usuario/getUsuarios"
+        
+      )
+      .then((res) => {
+        console.log(res.data);
+        setUsuarios(res.data);
+      });
+  }, []);
+
+
+  function crearSede() {
     axios
       .post(
-        "http://18.223.121.116:4000/usuario/nuevoUsuario",
+        "http://18.223.121.116:4000/sede/nuevaSede",
         {
-            /*
-          DPI: dpi,
-          nombre: nombre,
-          fecha_nacimiento: fecha,
-          correo: correo,
-          password: clave*/
+          alias:alias,
+          direccion:direccion+", "+departamento,
+          municipio:municipio,
+          departamento:departamento,
+          encargado:encargado  
+        
         }
       )
       .then((res)=>{
@@ -28,6 +43,16 @@ export default function NuevaSede() {
         console.log(error);
       });
   }
+
+  const lista = usuarios.map((element) => {
+    {
+      return (
+        <option value={element.ID}>{element.DPI+" - "+element.nombre}</option>
+      );
+    }
+  });
+
+
   return (
     <div className="formulario">
       <form autoComplete="off">
@@ -71,16 +96,14 @@ export default function NuevaSede() {
 
         <div class="form-group">
           <label for="exampleFormControlTextarea1">Encargado</label>
-          <input
-            class="form-control"
-            id="exampleFormControlTextarea1"
-            onChange={(event) => setEncargado(event.target.value)}
-          ></input>
+          <select class="form-control" id="exampleFormControlSelect1" onChange={(event) =>  setEncargado(event.target.value)}>
+                {lista}
+          </select>
         </div>
 
         
       </form>
-      <button className="btn-primary" onClick={() => crearProducto()}>
+      <button className="btn-primary" onClick={() => crearSede()}>
         {" "}
         Crear
       </button>
