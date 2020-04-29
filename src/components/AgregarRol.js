@@ -22,7 +22,7 @@ export default function AgregarRol() {
   function guardarRol() {
     axios
       .post(
-        "http://18.223.121.116:4000/permiso/asignarRol",
+        "http://18.223.121.116:4000/rol/asignarRol",
         {
             id_usuario: usuario,
             id_rol: rol

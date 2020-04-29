@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ListaProductos from "./ListaProductos";
 
-export default function RegistrarVenta() {
-  const [sedes = [], setSedes] = useState();
+export default function RegistrarVenta2() {
+  const [clientes = [], setClientes] = useState();
   const [bodegas = [], setBodegas] = useState();
   const [productos = [], setProductos] = useState();
   const [bodOrigen, setBodorigen] = useState();
@@ -11,23 +11,25 @@ export default function RegistrarVenta() {
   const [bodDestino, setBoddestino] = useState();
   const [producto, setProducto] = useState();
   const [cantidad, setCantidad] = useState();
-  const [sede, setSede] = useState();
-  const [sedeOrigen, setSedeorigen] = useState();
-  const [sedeDestino, setSededestiono] = useState();
-
-
+  const [precio, setPrecio] = useState();
+  const [cliente, setcliente] = useState();
+  const [sedeOrigen = 1, setSedeorigen] = useState();
+  const [sedeDestino = 1, setSededestiono] = useState();
   const usr = JSON.parse(localStorage.getItem('user'));
   const usrl=usr.ID;
   const [fecha, setfecha] = useState();
+  const [fechaentrega, setfechaentrega] = useState();
   const [repartido, setRepartido] = useState();
+  const [sedebodega1, setsedebodega1] = useState();
+  const [sedebodega2, setsedebodega2] = useState();
   const [idtraslado, setidtraslado] = useState();
   useEffect(() => {
-    //getBodegas();
+    getBodegas();
     getProductos();
-    getSedes();
+    getClientes();
     getProductos();
     getRepartidores();
-   
+    
 
     ///Codigo para validaciones
   }, []);
@@ -47,59 +49,8 @@ export default function RegistrarVenta() {
       });
   }
 
-  function getBodegasOrigen(){
-    
-    console.log("sede origen"+sedeOrigen);
-    axios
-      .post(
-        "http://18.223.121.116:4000/bodega/getBodegasDeSede",
-        {
-            
-            sede: sedeOrigen
-         
-          
-        }
+  
 
-       
-      )
-      .then((res)=>{
-        console.log(res.data);
-       setBodegas(res.data);
-        //const jaja = JSON.parse(res);
-        console.log(res.data)
-      })
-      .catch((error)=>{
-        console.log(error);
-      });
-
-  }
-
-  function getBodegasDestino(){
-    
-    console.log("sede destino"+sedeDestino);
-    axios
-      .post(
-        "http://18.223.121.116:4000/bodega/getBodegasDeSede",
-        {
-            
-            sede: sedeDestino
-         
-          
-        }
-
-       
-      )
-      .then((res)=>{
-        console.log(res.data);
-       setBodegas(res.data);
-        //const jaja = JSON.parse(res);
-        console.log(res.data)
-      })
-      .catch((error)=>{
-        console.log(error);
-      });
-
-  }
   function getBodegas()
   {
     axios
@@ -127,36 +78,65 @@ export default function RegistrarVenta() {
       });
   }
 
-  function getSedes()
+  function getClientes()
   {
     axios
       .get(
-        "http://18.223.121.116:4000/sede/getSedes",
+        "http://18.223.121.116:4000/cliente/getClientes",
       )
       .then((res)=>{
-        setSedes(res.data);
+        setClientes(res.data);
       })
       .catch((error)=>{
         console.log(error);
       });
   }
 
+  function crearEnvio(){
+    console.log("venta "+idtraslado);
+    console.log("repartidor "+repartido);
+
+    axios
+    .post(
+      "http://18.223.121.116:4000/venta/crearEnvioVenta",
+      { 
+          venta:idtraslado,
+           repartidor:repartido
+      }
+
+     
+    )
+    .then((res)=>{
+      console.log(res);
+    
+    })
+    .catch((error)=>{
+      console.log(error);
+    });
+    
+  }
 
   
 
   function AgregarDetalleTraslado() {
-    console.log("traslado "+idtraslado);
+    console.log("venta "+idtraslado);
     console.log("producto "+producto);
     console.log("cantidad "+cantidad);
+    console.log("precio "+precio);
   
+
+   
     axios
       .post(
-        "http://18.223.121.116:4000/transferencia/nuevoDetalleTransferencia",
+        "http://18.223.121.116:4000/venta/detalleVenta",
         {
             
-            transferencia: idtraslado ,
-            producto: producto,
-            cantidad: cantidad
+        
+           
+            ID_venta:idtraslado,
+             ID_producto:producto,
+            cantidad:cantidad,
+            precio_venta:precio
           
         }
 
@@ -174,31 +154,33 @@ export default function RegistrarVenta() {
   
   }
 
-  function generarTranslado() {
+  function generarVenta() {
 
-    console.log("fecha"+fecha);
-    console.log("usuario log"+usrl);
+    console.log("fecha F"+fecha);
+    console.log("fecha E"+fechaentrega);
+    console.log("usuario vendedor"+usrl);
     console.log("origen"+ bodOrigen);
-    console.log("destino"+bodDestino);
-    console.log("repartidor"+repartido);
+    console.log("cliente"+cliente);
+
    
  
    axios
       .post(
-        "http://18.223.121.116:4000/transferencia/nuevaTransferencia",
+        "http://18.223.121.116:4000/venta/nuevaVentaDomicilio",
         {
-          fecha: fecha,
-          tipo: 2,
-          usuario: usrl,
-          bodega_fuente: bodOrigen,
-          bodega_destino: bodDestino,
-          repartidor: repartido
+            
+                cliente:cliente,
+                vendedor:usrl,
+                bodega:bodOrigen,
+                fecha_factura:fecha,
+                fecha_entrega:fechaentrega
+            
           
         }
         
       )
       .then((res)=>{
-        console.log(res);
+        console.log(res.data);
         setidtraslado(res.data.insertId)
         //idtraslado=setidtrasladores.data.insertId;
         //const jaja = JSON.parse(res);
@@ -210,10 +192,10 @@ export default function RegistrarVenta() {
   
   }
 
-  const listaSedes = sedes.map((element) => {
+  const listaClientes = clientes.map((element) => {
     {
       return (
-        <option value={element.id}>{element.alias} - {element.direccion}</option>
+        <option value={element.ID}>{element.nombre}</option>
       );
     }
   });
@@ -229,7 +211,7 @@ export default function RegistrarVenta() {
   const ListaProductos = productos.map((element) => {
     {
       return (
-        <option value={element.ID}>{element.codigo_barras} - {element.nombre}</option>
+        <option value={element.ID}>{element.codigo_barras} - {element.nombre} - Q{element.precio}</option>
       );
     }
   });
@@ -246,59 +228,27 @@ export default function RegistrarVenta() {
   return (
     <div className="formulario">
       <form autoComplete="off">
-        <h1 align="center">Solicitar Traslado Externo </h1>
-        <h3>Elegir Sede</h3>
+        <h1 align="center">Venta a Domicilio</h1>
+        <h3>Elegir Cliente</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Sede Origen: </label>
-          <select class="form-control" onChange={(event) =>   {  setSedeorigen(event.target.value); }}>
-                    {listaSedes}
+          <label for="exampleFormControlInput1">Cliente: </label>
+          <select class="form-control" onChange={(event) =>   {  setcliente(event.target.value); }}>
+                    {listaClientes}
                 </select>
                 <br></br>
-                <div class="text-center">
-                <button type="button" className="btn-primary" onClick={() => getBodegasOrigen()}>
-                {" "}
-                Ver Bodegas Disponibles
-          </button>
-          </div>
         </div>
 
 
-        <h3>Elegir Bodega Origen</h3>
+        <h3>Elegir Bodega</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Bodega Origen: </label>
+          <label for="exampleFormControlInput1">Bodega Fuente: </label>
           <select class="form-control" onChange={(event) =>    setBodorigen(event.target.value) }>
                     {listaBodegas}
                 </select>
         </div>
 
-        <h3>Elegir Sede</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Sede Destino: </label>
-          <select class="form-control" onChange={(event) =>   {  setSededestiono(event.target.value); }}>
-                    {listaSedes}
-                </select>
-                <br></br>
-                <div class="text-center">
-                <button type="button" className="btn-primary" onClick={() => getBodegasDestino()}>
-                {" "}
-                Ver Bodegas Disponibles
-          </button>
-          </div>
-        </div>
-
-
-        <h3>Elegir Bodega Destino</h3>
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Bodega Destino: </label>
-          <select class="form-control" onChange={(event) =>    setBoddestino(event.target.value) }>
-                    {listaBodegas}
-                </select>
-        </div>
-
-       
-
-        <div class="form-group">
-        <label for="exampleFormControlSelect2">Fecha de Traslado</label>
+        <label for="exampleFormControlSelect2">Fecha de Factura</label>
         <input
           class="form-control"
           id="exampleFormControlInput1"
@@ -306,23 +256,28 @@ export default function RegistrarVenta() {
           onChange={(event) => setfecha(event.target.value)}
         />
       </div>
+
       <div class="form-group">
-          <label for="exampleFormControlInput1">Repartidor: </label>
-          <select class="form-control" onChange={(event) =>     setRepartido(event.target.value) }>
-                    {listaRepartidor}
-                </select>
-        </div>
+        <label for="exampleFormControlSelect2">Fecha de Envio</label>
+        <input
+          class="form-control"
+          id="exampleFormControlInput1"
+          placeholder="29/04/1997"
+          onChange={(event) => setfechaentrega(event.target.value)}
+        />
+      </div>
+      
 
         
         <div class="text-center">
-        <button type="button" className="btn-primary" onClick={() => generarTranslado()}>
+        <button type="button" className="btn-primary" onClick={() => generarVenta()}>
                 {" "}
-                Crear Traslado Interno
+                Crear Venta
           </button>
         </div>
         
         <br></br>
-        <h1 align="center">Agregar Productos a Traslado  </h1>
+        <h1 align="center">Agregar Productos a Venta  </h1>
         
         <div class="form-group">
           <label for="exampleFormControlInput1">Producto: </label>
@@ -338,13 +293,34 @@ export default function RegistrarVenta() {
           onChange={(event) => setCantidad(event.target.value)}
         />
       </div>
+      <div class="form-group">
+        <label for="exampleFormControlSelect2">Precio</label>
+        <input
+          class="form-control"
+          id="exampleFormControlInput1"
+          onChange={(event) => setPrecio(event.target.value)}
+        />
+      </div>
       <div class="text-center">
         <button type="button" className="btn-primary" onClick={() => AgregarDetalleTraslado()}>
                 {" "}
-                Agregar a Traslado
+                Agregar a Venta
           </button>
         </div>
-
+        <br></br>
+        <h3>Elegir Repartidor</h3>
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Repartidor: </label>
+          <select class="form-control" onChange={(event) =>    setRepartido(event.target.value) }>
+                    {listaRepartidor}
+        </select>
+        </div>
+        <div class="text-center">
+        <button type="button" className="btn-primary" onClick={() => crearEnvio()}>
+                {" "}
+                Crear Envio
+          </button>
+        </div>
       </form>
     </div>
 

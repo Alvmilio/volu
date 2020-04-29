@@ -63,7 +63,7 @@ export default function NuevaBodega() {
       )
       .then((res)=>{
         console.log(res);
-        console.log("sede creada")
+        console.log("bodega creada")
       })
       .catch((error)=>{
         console.log(error);
