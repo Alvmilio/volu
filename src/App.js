@@ -28,9 +28,13 @@ import ListaClientes from "./components/ListaClientes";
 import ModificarInventario from "./components/ModificarInventario";
 import AgregarInventario from "./components/AgregarInventario";
 import SolicitarTraslado from "./components/SolicitarTraslado";
+import SolicitarTrasladoInterno from "./components/SolicitarTrasladoInterno";
 import ListaRoles from "./components/ListaRoles";
 import ListaPermisos from "./components/ListaPermisos";
 import EliminarSede from "./components/EliminarSede";
+//import TransferenciaExterna from "./components/TransferenciaExterna";
+import TransferenciaInterna from "./components/TransferenciaInterna";
+import ConfirmarEntrega from "./components/ConfirmarEntrega";
 
 function App() {
   return (
@@ -247,14 +251,20 @@ function App() {
                   <Dropdown.Item href="#/action-3">Modificar Inventario</Dropdown.Item>
                 </Link>
                 <Link class="nav-link" to="/solicitarTraslado">
-                  <Dropdown.Item href="#/action-3">Transferencias</Dropdown.Item>
+                  <Dropdown.Item href="#/action-3">Transferencia Externa</Dropdown.Item>
                 </Link>
-                <Link class="nav-link" to="/registrarVenta">
-                  <Dropdown.Item href="#/action-1">Visualizar/Aceptar transf. externas</Dropdown.Item>
+                <Link class="nav-link" to="/solicitarTrasladoI">
+                  <Dropdown.Item href="#/action-3">Transferencia Interna</Dropdown.Item>
                 </Link>
-                <Link class="nav-link" to="/removerPermiso">
-                  <Dropdown.Item href="#/action-3">Visualizar/Aceptar transf. internas</Dropdown.Item>
+               
+                <Link class="nav-link" to="/transferenciainterna">
+                  <Dropdown.Item href="#/action-3">Visualizar/Aceptar transf. internas/externa</Dropdown.Item>
                 </Link>
+
+                <Link class="nav-link" to="/confirmarTraslado">
+                  <Dropdown.Item href="#/action-3">confirmar Traslado</Dropdown.Item>
+                </Link>
+
                 </Dropdown.Menu>
               </Dropdown>
               </li>
@@ -323,6 +333,9 @@ function App() {
               <Route path="/solicitarTraslado">
                 <SolicitarTraslado></SolicitarTraslado>
               </Route>
+              <Route path="/solicitarTrasladoI">
+                <SolicitarTrasladoInterno></SolicitarTrasladoInterno>
+              </Route>
               <Route path="/agregarInventario">
                 <AgregarInventario></AgregarInventario>
               </Route>
@@ -377,6 +390,9 @@ function App() {
               <Route path="/listaUsuarios">
                 <ListaEspera></ListaEspera>
               </Route>
+              <Route path="/confirmarTraslado">
+                <ConfirmarEntrega></ConfirmarEntrega>
+              </Route>
               <Route path="/modificarUsuario">
                 <ModificarUsuario></ModificarUsuario>
               </Route>
@@ -389,10 +405,15 @@ function App() {
               <Route path="/nuevaBodega">
                 <NuevaBodega></NuevaBodega>
               </Route>
+          
+              <Route path="/transferenciainterna">
+                <TransferenciaInterna></TransferenciaInterna>
+              </Route>
               <Route path="/">
                 <NuevoPaciente></NuevoPaciente>
               </Route>
 
+              
             </Switch>
           </div>
           <footer class="bg-white sticky-footer">

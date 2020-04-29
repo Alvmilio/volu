@@ -12,14 +12,14 @@ export default function RegistrarVenta() {
   const [producto, setProducto] = useState();
   const [cantidad, setCantidad] = useState();
   const [sede, setSede] = useState();
-  const [sedeOrigen, setSedeorigen] = useState();
-  const [sedeDestino, setSededestiono] = useState();
-
-
+  const [sedeOrigen = 1, setSedeorigen] = useState();
+  const [sedeDestino = 1, setSededestiono] = useState();
   const usr = JSON.parse(localStorage.getItem('user'));
   const usrl=usr.ID;
   const [fecha, setfecha] = useState();
   const [repartido, setRepartido] = useState();
+  const [sedebodega1, setsedebodega1] = useState();
+  const [sedebodega2, setsedebodega2] = useState();
   const [idtraslado, setidtraslado] = useState();
   useEffect(() => {
     //getBodegas();
@@ -47,15 +47,15 @@ export default function RegistrarVenta() {
       });
   }
 
-  function getBodegasOrigen(){
+  function getBodegasinternas(){
     
-    console.log("sede origen"+sedeOrigen);
+    console.log("sede elegida"+sede);
     axios
       .post(
         "http://18.223.121.116:4000/bodega/getBodegasDeSede",
         {
             
-            sede: sedeOrigen
+            sede: sede 
          
           
         }
@@ -74,32 +74,6 @@ export default function RegistrarVenta() {
 
   }
 
-  function getBodegasDestino(){
-    
-    console.log("sede destino"+sedeDestino);
-    axios
-      .post(
-        "http://18.223.121.116:4000/bodega/getBodegasDeSede",
-        {
-            
-            sede: sedeDestino
-         
-          
-        }
-
-       
-      )
-      .then((res)=>{
-        console.log(res.data);
-       setBodegas(res.data);
-        //const jaja = JSON.parse(res);
-        console.log(res.data)
-      })
-      .catch((error)=>{
-        console.log(error);
-      });
-
-  }
   function getBodegas()
   {
     axios
@@ -188,7 +162,7 @@ export default function RegistrarVenta() {
         "http://18.223.121.116:4000/transferencia/nuevaTransferencia",
         {
           fecha: fecha,
-          tipo: 2,
+          tipo: 1,
           usuario: usrl,
           bodega_fuente: bodOrigen,
           bodega_destino: bodDestino,
@@ -246,16 +220,16 @@ export default function RegistrarVenta() {
   return (
     <div className="formulario">
       <form autoComplete="off">
-        <h1 align="center">Solicitar Traslado Externo </h1>
+        <h1 align="center">Solicitar Traslado Interno </h1>
         <h3>Elegir Sede</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Sede Origen: </label>
-          <select class="form-control" onChange={(event) =>   {  setSedeorigen(event.target.value); }}>
+          <label for="exampleFormControlInput1">Sede: </label>
+          <select class="form-control" onChange={(event) =>   {  setSede(event.target.value); }}>
                     {listaSedes}
                 </select>
                 <br></br>
                 <div class="text-center">
-                <button type="button" className="btn-primary" onClick={() => getBodegasOrigen()}>
+                <button type="button" className="btn-primary" onClick={() => getBodegasinternas()}>
                 {" "}
                 Ver Bodegas Disponibles
           </button>
@@ -263,39 +237,20 @@ export default function RegistrarVenta() {
         </div>
 
 
-        <h3>Elegir Bodega Origen</h3>
+        <h3>Elegir Bodegas</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Bodega Origen: </label>
+          <label for="exampleFormControlInput1">Bodega Fuente: </label>
           <select class="form-control" onChange={(event) =>    setBodorigen(event.target.value) }>
                     {listaBodegas}
                 </select>
         </div>
 
-        <h3>Elegir Sede</h3>
         <div class="form-group">
-          <label for="exampleFormControlInput1">Sede Destino: </label>
-          <select class="form-control" onChange={(event) =>   {  setSededestiono(event.target.value); }}>
-                    {listaSedes}
-                </select>
-                <br></br>
-                <div class="text-center">
-                <button type="button" className="btn-primary" onClick={() => getBodegasDestino()}>
-                {" "}
-                Ver Bodegas Disponibles
-          </button>
-          </div>
-        </div>
-
-
-        <h3>Elegir Bodega Destino</h3>
-        <div class="form-group">
-          <label for="exampleFormControlInput1">Bodega Destino: </label>
-          <select class="form-control" onChange={(event) =>    setBoddestino(event.target.value) }>
+            <label for="exampleFormControlSelect1">Bodega Destino:</label>
+            <select class="form-control" onChange={(event) =>     setBoddestino(event.target.value) }>
                     {listaBodegas}
                 </select>
-        </div>
-
-       
+          </div>
 
         <div class="form-group">
         <label for="exampleFormControlSelect2">Fecha de Traslado</label>
