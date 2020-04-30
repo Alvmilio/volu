@@ -1145,3 +1145,613 @@ app.post('/cliente/nuevoCliente', (req, res) => {
         }
     });
 })
+//-----------------------------VENTAS y DETALLE_VENTAS-----------------------------------
+
+//Obtener todas las ventas
+app.get('/venta/getVentas', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+
+    const sql = 'SELECT * FROM venta';
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Insertar nueva venta (tipo = 1)
+app.post('/venta/nuevaVentaLocal', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let cliente = req.body.cliente;
+    let vendedor = req.body.vendedor;
+    let bodega = req.body.bodega;
+    let fecha_factura = req.body.fecha_factura;
+    let fecha_entrega = req.body.fecha_factura;
+    const sql = `INSERT INTO venta(cliente,vendedor,fecha_factura,fecha_entrega,total,tipo,ID_bodega) VALUES(${cliente},${vendedor},STR_TO_DATE('${fecha_factura}', "%d/%m/%Y"),STR_TO_DATE('${fecha_entrega}', "%d/%m/%Y"),0.0,1,${bodega})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Insertar detalle a una venta
+app.post('/venta/detalleVenta', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let producto = req.body.ID_producto;
+    let venta = req.body.ID_venta;
+    let cantidad = req.body.cantidad;
+    let precio_venta = req.body.precio_venta;
+
+    const sql = `INSERT INTO detalle_venta(producto,venta,cantidad,precio_venta) VALUES(${producto},${venta},${cantidad},${precio_venta})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Finalizar venta local
+app.post('/venta/finalizarVentaLocal', (req, res) => {
+    var con = mysql.createConnection({
+        multipleStatements: true,
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let venta = req.body.ID_venta;
+
+    const sql = `UPDATE venta SET total = (SELECT sum(dv.cantidad * dv.precio_venta) from detalle_venta dv WHERE dv.venta = ${venta}) WHERE id = ${venta};
+    UPDATE inventario i INNER JOIN (SELECT v.ID_bodega, dv.cantidad, dv.producto from detalle_venta dv, venta v where dv.venta = ${venta} and dv.venta = v.id) c ON c.ID_bodega = i.ID_bodega SET i.cantidad = i.cantidad - c.cantidad WHERE c.producto = i.ID_producto;`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+
+//Insertar nueva venta a domicilio (tipo = 2)
+app.post('/venta/nuevaVentaDomicilio', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let cliente = req.body.cliente;
+    let vendedor = req.body.vendedor;
+    let bodega = req.body.bodega;
+    let fecha_factura = req.body.fecha_factura;
+    let fecha_entrega = req.body.fecha_entrega;
+    const sql = `INSERT INTO venta(cliente,vendedor,fecha_factura,fecha_entrega,total,tipo,ID_bodega) VALUES(${cliente},${vendedor},STR_TO_DATE('${fecha_factura}', "%d/%m/%Y"),STR_TO_DATE('${fecha_entrega}', "%d/%m/%Y"),0.0,2,${bodega})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Crear envio de orden a domicilio (estado 1 = Pendiente de entrega)
+app.post('/venta/crearEnvioVenta', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let venta = req.body.venta;
+    let repartidor = req.body.repartidor;
+    let estado = 1;
+    const sql = `INSERT INTO envio(venta,repartidor,estado) VALUES(${venta},${repartidor},${estado})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+
+app.post('/venta/getEnviosRepartidor', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let repartidor = req.body.repartidor;
+    const sql = `SELECT * FROM envio WHERE repartidor = ${repartidor}`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//El repartidor confirma la entrega del envio (estado 2 = Entregado)
+app.post('/venta/confirmarEntregaEnvio', (req, res) => {
+    var con = mysql.createConnection({
+        multipleStatements: true,
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let venta = req.body.venta;
+
+    const sql = `UPDATE envio SET estado = 2 WHERE venta = ${venta};
+    UPDATE venta SET total = (SELECT sum(dv.cantidad * dv.precio_venta)*1.10 from detalle_venta dv WHERE dv.venta = ${venta}) WHERE id = ${venta};
+    UPDATE inventario i INNER JOIN (SELECT v.ID_bodega, dv.cantidad, dv.producto from detalle_venta dv, venta v where dv.venta = ${venta} and dv.venta = v.id) c ON c.ID_bodega = i.ID_bodega SET i.cantidad = i.cantidad - c.cantidad WHERE c.producto = i.ID_producto;`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+
+//-----------------------------FACTURA-----------------------------------
+
+app.post('/factura/getHeader', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let venta = req.body.venta;
+    const sql = `select v.ID 'Factura', c.nombre 'Cliente', ve.nombre 'Vendedor' , v.fecha_factura, v.fecha_entrega, v.total, b.nombre 'Bodega' from venta v INNER JOIN cliente c on c.ID = v.cliente INNER JOIN usuario ve on v.vendedor = ve.ID INNER JOIN bodega b on b.ID = v.ID_bodega WHERE v.ID = ${venta}`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+app.post('/factura/getDetalle', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let venta = req.body.venta;
+    const sql = `select dv.producto, p.nombre, dv.cantidad, dv.precio_venta from detalle_venta dv INNER JOIN producto p on p.ID = dv.producto WHERE dv.venta = ${venta}`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//----------------------------TRANSFERENCIAS----------------------------
+//Obtener todas las transferencias
+app.get('/transferencia/getTransferencias', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    const sql = `SELECT * FROM transferencia`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Nueva transferencia interna (tipo = 1 (Interna), tipo = 2 (externa), estado = 1 (Pendiente de autorizar))
+app.post('/transferencia/nuevaTransferencia', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+
+    let fecha = req.body.fecha;
+    let tipo = req.body.tipo;
+    let usuario = req.body.usuario;
+    let bodega_fuente = req.body.bodega_fuente;
+    let bodega_destino = req.body.bodega_destino;
+    let repartidor = req.body.repartidor;
+    let estado = 1;
+    const sql = `INSERT INTO transferencia(fecha,tipo,usuario,bodega_fuente,bodega_destino,repartidor,estado) VALUES (STR_TO_DATE('${fecha}', "%d/%m/%Y"),${tipo},${usuario},${bodega_fuente},${bodega_destino},${repartidor},${estado})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Nuevo detalle_transferencia
+
+app.post('/transferencia/nuevoDetalleTransferencia', (req, res) => {
+
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+
+    let transferencia = req.body.transferencia;
+    let producto = req.body.producto;
+    let cantidad = req.body.cantidad;
+
+    const sql = `INSERT INTO detalle_transferencia(transferencia,producto,cantidad) VALUES (${transferencia},${producto},${cantidad})`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+
+})
+
+//Obtener detalle de la transferencia
+
+app.post('/transferencia/verDetalleTransferencia', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let transferencia = req.body.transferencia;
+    const sql = `SELECT * FROM detalle_transferencia WHERE transferencia = ${transferencia}`;
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+//Autorizar (estado = 2) o denegar (estado = -1) una transferencia
+app.post('/transferencia/modificarEstadoTransferencia', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let estado = req.body.estado;
+    let usuario = req.body.usuario;
+    let transferencia = req.body.transferencia;
+    const sql = `UPDATE transferencia SET estado = ${estado}, autorizador = ${usuario} WHERE ID = ${transferencia}`
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+
+//Confirmar entrega de transferencia (estado 2 a estado 3 (Finalizado))
+app.post('/transferencia/confirmarTransferencia', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+    let transferencia = req.body.transferencia;
+    const sql = `CALL finalizar_transferencia(${transferencia})`
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+})
+
+
+
+//----------------------------REPORTES----------------------------
+app.post('/reporte/cantVentas', (req, res) => {
+    var con = mysql.createConnection({
+        host: ipDB,
+        user: "admin",
+        password: "admin",
+        database: "proyecto",
+        port: 3306
+    });
+
+    let vendedor = req.body.vendedor;
+    let sql = `SELECT v.fecha_factura, count(*) 'cantidad' from venta v GROUP BY v.fecha_factura`;
+    if (vendedor != 0) {
+        sql = `SELECT v.fecha_factura, count(*) 'cantidad' from venta v WHERE v.vendedor = ${vendedor} GROUP BY v.fecha_factura; `
+    }
+    console.log(sql);
+    con.connect((err) => {
+        if (err) {
+            res.json({ "error": "No se pudo conectar a la BD " + err });
+            con.end();
+        } else {
+            console.log("Connectado a la DB");
+            con.query(sql, (err, result) => {
+                if (err) {
+                    console.log("Error en el query " + err)
+                    res.json({ "error": "Error en el query" + err });
+                    con.end();
+                } else {
+                    console.log("Result: " + result);
+                    res.json(result);
+                    con.end();
+                }
+            });
+        }
+    });
+
+})
