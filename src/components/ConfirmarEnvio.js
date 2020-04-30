@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {Redirect}  from 'react-router-dom';
 import axios from "axios";
 import ListaProductos from "./ListaProductos";
 import * as jsPDF from 'jspdf'
@@ -14,6 +15,7 @@ export default function RegistrarVenta() {
   const [transferencia, settransferencia] = useState();
   const [cantidad, setCantidad] = useState();
   const [sede, setSede] = useState();
+  const [state, setState] = useState();
   const usr = JSON.parse(localStorage.getItem('user'));
   const usrl=usr.ID;
   
@@ -28,6 +30,7 @@ export default function RegistrarVenta() {
   const [total, settotal] = useState();
   const [bodega, setbodega] = useState();
   useEffect(() => {
+    validarPermisos();
     //getBodegas();
     getTransferencias();
    
@@ -221,8 +224,38 @@ export default function RegistrarVenta() {
     }
   });
 
+  function validarPermisos()
+  {
+    var usr = JSON.parse(localStorage.getItem('user'));
+    axios
+      .post(
+        "http://18.223.121.116:4000/permiso/tienePermiso",
+        {
+          usuario: usr.ID,
+          permiso: 8
+        }
+      )
+      .then((res)=>{
+        console.log(res);
+        if(res.data.res == 0){
+          alert("No tiene acceso a este modulo\n Adios!");
+          setState(1);
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+
+  function renderRedirect()
+  {
+    if(state == 1)
+      return <Redirect to='/iniciarSesion' />
+  }
+
   return (
     <div className="formulario">
+      {renderRedirect()}
       <form autoComplete="off">
       
         

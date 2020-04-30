@@ -29,6 +29,7 @@ export default function NuevoPermiso() {
         }
       )
       .then((res)=>{
+        console.log(res);
         console.log("permiso asignado")
       })
       .catch((error)=>{
@@ -39,7 +40,7 @@ export default function NuevoPermiso() {
   const lista = usuarios.map((element) => {
     {
       return (
-        <option value={element.ID}>{element.DPI}</option>
+        <option value={element.ID}>{element.DPI} - {element.nombre}</option>
       );
     }
   });

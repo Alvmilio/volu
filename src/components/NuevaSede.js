@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from 'react-router-dom';
 import axios from "axios";
 
 export default function NuevaSede() {
@@ -8,8 +9,10 @@ export default function NuevaSede() {
   const [departamento, setDepartamento] = useState();
   const [municipio, setMunicipio] = useState();
   const [encargado, setEncargado] = useState();
+  const [state, setState] = useState();
 
   useEffect(() => {
+    validarPermisos();
     axios
       .get(
         
@@ -52,9 +55,39 @@ export default function NuevaSede() {
     }
   });
 
+  function validarPermisos()
+  {
+    var usr = JSON.parse(localStorage.getItem('user'));
+    axios
+      .post(
+        "http://18.223.121.116:4000/permiso/tienePermiso",
+        {
+          usuario: usr.ID,
+          permiso: 10
+        }
+      )
+      .then((res)=>{
+        console.log(res);
+        if(res.data.res == 0){
+          alert("No tiene acceso a este modulo\n Adios!");
+          setState(1);
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+
+  function renderRedirect()
+  {
+    if(state == 1)
+      return <Redirect to='/iniciarSesion' />
+  }
+
 
   return (
     <div className="formulario">
+      {renderRedirect()}
       <form autoComplete="off">
         <h1 align="center">Nueva Sede </h1>
         <h2>Datos Sede</h2>

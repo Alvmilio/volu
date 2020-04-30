@@ -37,6 +37,7 @@ import EliminarSede from "./components/EliminarSede";
 //import TransferenciaExterna from "./components/TransferenciaExterna";
 import TransferenciaInterna from "./components/TransferenciaInterna";
 import ConfirmarEntrega from "./components/ConfirmarEntrega";
+import ReporteVentas from "./components/ReporteVentas";
 
 function App() {
   return (
@@ -293,7 +294,7 @@ function App() {
                 <Link class="nav-link" to="/removerPermiso">
                   <Dropdown.Item href="#/action-3">Eliminar</Dropdown.Item>
                 </Link>
-                <Link class="nav-link" to="/removerPermiso">
+                <Link class="nav-link" to="/reporteVentas">
                   <Dropdown.Item href="#/action-3">Reporte</Dropdown.Item>
                 </Link>
                 </Dropdown.Menu>
@@ -329,6 +330,9 @@ function App() {
         <div class="d-flex flex-column" id="content-wrapper">
           <div id="content">
             <Switch>
+              <Route path="/reporteVentas">
+                <ReporteVentas></ReporteVentas>
+              </Route>
               <Route path="/eliminarSede">
                 <EliminarSede></EliminarSede>
               </Route>

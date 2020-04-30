@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ListaProductos from "./ListaProductos";
+import {Redirect} from 'react-router-dom';
 
 export default function RegistrarVenta() {
   const [detalles = [], setdetalles] = useState();
@@ -17,8 +18,10 @@ export default function RegistrarVenta() {
   const usrl=usr.ID;
   const [fecha, setfecha] = useState();
   const [repartido, setRepartido] = useState();
+  const [state, setState] = useState();
   
   useEffect(() => {
+    validarPermisos();
     //getBodegas();
     //getTransferencias();
    
@@ -172,8 +175,38 @@ export default function RegistrarVenta() {
     }
   });
 
+  function validarPermisos()
+  {
+    var usr = JSON.parse(localStorage.getItem('user'));
+    axios
+      .post(
+        "http://18.223.121.116:4000/permiso/tienePermiso",
+        {
+          usuario: usr.ID,
+          permiso: 6
+        }
+      )
+      .then((res)=>{
+        console.log(res);
+        if(res.data.res == 0){
+          alert("No tiene acceso a este modulo\n Adios!");
+          setState(1);
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+
+  function renderRedirect()
+  {
+    if(state == 1)
+      return <Redirect to='/iniciarSesion' />
+  }
+
   return (
     <div className="formulario">
+      {renderRedirect()}
       <form autoComplete="off">
       <div class="text-center">
                 <button type="button" className="btn-primary" onClick={() => getTransferenciasI()}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {Redirect} from 'react-router-dom';
 import axios from "axios";
 import ListaProductos from "./ListaProductos";
 
@@ -21,7 +22,9 @@ export default function RegistrarVenta() {
   const [fecha, setfecha] = useState();
   const [repartido, setRepartido] = useState();
   const [idtraslado, setidtraslado] = useState();
+  const [state, setState] = useState();
   useEffect(() => {
+    validarPermisos();
     //getBodegas();
     getProductos();
     getSedes();
@@ -243,8 +246,38 @@ export default function RegistrarVenta() {
     }
   });
 
+  function validarPermisos()
+  {
+    var usr = JSON.parse(localStorage.getItem('user'));
+    axios
+      .post(
+        "http://18.223.121.116:4000/permiso/tienePermiso",
+        {
+          usuario: usr.ID,
+          permiso: 5
+        }
+      )
+      .then((res)=>{
+        console.log(res);
+        if(res.data.res == 0){
+          alert("No tiene acceso a este modulo\n Adios!");
+          setState(1);
+        }
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+
+  function renderRedirect()
+  {
+    if(state == 1)
+      return <Redirect to='/iniciarSesion' />
+  }
+
   return (
     <div className="formulario">
+      {renderRedirect()}
       <form autoComplete="off">
         <h1 align="center">Solicitar Traslado Externo </h1>
         <h3>Elegir Sede</h3>
