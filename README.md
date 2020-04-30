@@ -1,3 +1,3 @@
-### Proyecto de Clase
+## Proyecto de Clase
 
-# Enlace a la pagina : 
+### Enlace a la pagina : 
